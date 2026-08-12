@@ -1,0 +1,16 @@
+# Vendored / tool-managed trees.
+#
+# These are owned by `raven upgrade`, not by this repository. Reformatting them
+# would make every upgrade land as a conflict against our own formatting, for no
+# benefit — the same drift problem that bit the Timogin repo's hook forks.
+.agents/
+.claude/
+.codex/
+.raven/
+
+# Generated
+node_modules/
+dist/
+build/
+coverage/
+pnpm-lock.yaml

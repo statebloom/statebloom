@@ -1,0 +1,18 @@
+{
+  "name": "@statebloom/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "StateBloom monorepo root. Not published.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statebloom/statebloom.git"
+  },
+  "packageManager": "pnpm@11.13.1",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.1",
+    "prettier": "^3.9.6"
+  },
+  "license": "Apache-2.0",
+  "author": "Creative Stack, LLC"
+}

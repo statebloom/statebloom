@@ -1,0 +1,44 @@
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+.DS_Store
+*.log
+npm-debug.log*
+.npmrc
+
+.env
+.env.*
+!.env.example
+
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Agent harness (RAVEN and per-tool adapters).
+#
+# Deliberately NOT vendored into this repository. These trees are installed and
+# upgraded per-developer by `raven install` / `raven upgrade`, so committing them
+# would put every upgrade in this project's public history, and would ship
+# executable agent hooks to contributors who never asked for them. Contributors
+# are free to install their own harness; none is required to build or test.
+#
+# See AGENTS.md, which stays committed and documents the conventions themselves.
+.agents/
+.claude/
+.codex/
+.raven/
+
+# MCP server manifest. Same reasoning, with one addition: a committed .mcp.json
+# is config that causes command execution on clone — an agent session opening
+# this repo would offer to launch semgrep/semble/gitnexus/language-server
+# binaries a contributor may not have and did not ask for. AGENTS.md already
+# treats these as locally configured capabilities rather than dependencies.
+.mcp.json
+
+# Machine-local agent settings. Listed separately on purpose: it must stay
+# ignored even if `.claude/` above is ever un-ignored to share project config.
+.claude/settings.local.json

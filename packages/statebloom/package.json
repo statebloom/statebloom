@@ -1,0 +1,28 @@
+{
+  "name": "statebloom",
+  "version": "0.0.1",
+  "description": "Name placeholder for the StateBloom project. The framework itself is published under the @statebloom scope.",
+  "keywords": [
+    "statebloom",
+    "placeholder"
+  ],
+  "homepage": "https://statebloom.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statebloom/statebloom.git",
+    "directory": "packages/statebloom"
+  },
+  "bugs": {
+    "url": "https://github.com/statebloom/statebloom/issues"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Creative Stack, LLC"
+}
