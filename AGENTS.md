@@ -41,6 +41,9 @@ Use the cheapest adequate source before reading full files.
 | Build, test, or log output                       | RTK-wrapped shell command |
 
 - `rg` is recursive by default; never pass `-r` for recursion. `-r` is ripgrep's `--replace` and takes an argument — unlike grep's `-r`, which means `--recursive`.
+- `rg` skips hidden files and directories by default. This repo's agent harness lives entirely under
+  `.agents/`, `.claude/`, `.codex/`, and `.raven/`, so a plain `rg` reads as clean when it simply
+  never looked. Use `--hidden` when searching harness content.
 - Batch independent reads, searches, and inspections per turn.
 - Skeleton-first: for a large or unfamiliar file, get a symbol map (LSP document symbols, or `ast-grep`/`rg`) before reading, then read only the ranges you need — read a full file only when it is small or the whole structure matters.
 - Return concise findings before editing.
