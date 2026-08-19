@@ -45,3 +45,15 @@ npm-debug.log*
 
 # Raven guided-merge scratch artifacts
 .raven/merge/
+
+# GitNexus code-intelligence index. Derived output of `gitnexus analyze` and
+# deleted by `gitnexus clean` — a binary graph DB plus parse caches and runtime
+# lock state, ~8 MB. Same reasoning as .mcp.json above: a locally configured
+# capability, not a project dependency. Also keeps its cache JSON out of
+# `prettier --check .`, which reads this file.
+.gitnexus/
+
+# Machine-local session memory (Remember plugin). Already self-ignored by a
+# nested .remember/.gitignore, but Prettier only reads the root .gitignore, so
+# without an entry here `just fmt-check` fails on scratch files.
+.remember/
