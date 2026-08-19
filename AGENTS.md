@@ -1,3 +1,43 @@
+# StateBloom Agent Instructions
+
+This file is repo-specific guidance followed by Raven's managed template block. Where the two
+disagree, the repo-specific guidance is correct: it describes this checkout, while the block
+describes a default Raven install.
+
+## Harness Boundary
+
+- `AGENTS.md` is the authoritative root instruction file, and the only one this repository ships.
+- **The agent harness is not vendored here.** `.agents/`, `.claude/`, `.codex/`, and `.raven/` are
+  git-ignored: they are installed and upgraded per-developer, so this repository would otherwise
+  carry every `raven upgrade` in its public history and ship executable agent hooks to contributors
+  who never asked for them. **No harness is required to build, lint, or test this project** — the
+  `justfile` is the contract, and it works on a bare clone.
+- Every `raven-*` skill, subagent, and document named in the managed block therefore refers to
+  something in a developer's **local** install, not to a path in this checkout. If you have RAVEN
+  installed, those names resolve; if you do not, the surrounding guidance still stands on its own and
+  nothing is missing from the build. Where a rule matters to the project rather than to the
+  harness, it is stated in full above rather than by reference.
+- Two claims in the block hold only for a harness install: that `.agents/skills/` is the canonical
+  location for reusable skills, and that deeper guidance lives in `.claude/docs/`. Both paths are
+  git-ignored here, and neither is tracked.
+
+## Repo-Specific Retrieval
+
+- `rg` skips hidden files and directories by default. This repo's agent harness lives entirely under
+  `.agents/`, `.claude/`, `.codex/`, and `.raven/`, so a plain `rg` reads as clean when it simply
+  never looked. Use `--hidden` when searching harness content. The block illustrates the same rule
+  with `common/`, a directory in Raven's own tree that does not exist here.
+
+## Local Instruction Boundary
+
+- Project-specific instructions belong above the managed block, in this part of the file. Raven
+  preserves everything outside the `RAVEN:BEGIN` / `RAVEN:END` markers verbatim across upgrades.
+- Do not edit inside the block. Its content is hash-stamped in the `RAVEN:BEGIN` marker; an edit
+  breaks that hash, reclassifies the block from `upgradeable` to `modified`, and stops
+  `raven upgrade` from replacing it. Send template changes upstream instead.
+
+<!-- RAVEN:BEGIN sha256=17784b98cb9bd52bb1543b304af8f0758ae2c7a91fb4639c82ab6eb92906247b -->
+
 # AGENTS.md
 
 ## Primary Objective
@@ -6,23 +46,11 @@ Be effective while preserving context. Prefer targeted retrieval, summaries, and
 
 ## Canonical Context
 
-- `AGENTS.md` is the authoritative root instruction file, and the only one this repository ships.
-- **The agent harness is not vendored here.** `.agents/`, `.claude/`, `.codex/`, and `.raven/` are
-  git-ignored: they are installed and upgraded per-developer, so this repository would otherwise
-  carry every `raven upgrade` in its public history and ship executable agent hooks to contributors
-  who never asked for them. **No harness is required to build, lint, or test this project** — the
-  `justfile` is the contract, and it works on a bare clone.
-- Every `raven-*` skill, subagent, and document named below therefore refers to something in a
-  developer's **local** install, not to a path in this checkout. If you have RAVEN installed, those
-  names resolve; if you do not, the surrounding guidance still stands on its own and nothing is
-  missing from the build. Where a rule matters to the project rather than to the harness, it is
-  stated here in full rather than by reference.
-- With a harness installed: `.agents/skills/` is the canonical location for reusable skills, and
-  agent-specific skill paths (e.g. `.claude/skills`) should point there rather than duplicate
-  content. Deeper guidance lives in `.claude/docs/` — `raven-authority-map`, `raven-guardrails`,
-  `raven-coding-principles`, `raven-namespace`, `raven-agent-compatibility`, `raven-lsp-mcp`, and
-  `raven-antipatterns`. When a `raven-*` skill and a generic skill cover the same intent, prefer
-  the `raven-*` one.
+- `AGENTS.md` is the authoritative root instruction file.
+- `.agents/skills/` is the canonical location for reusable skills.
+- Agent-specific skill paths (e.g. `.claude/skills`) should point to `.agents/skills`, not duplicate content.
+- When a `raven-*` skill and a generic skill cover the same intent, prefer the `raven-*` one — it encodes this project's guardrails.
+- Deeper guidance lives in `.claude/docs/`: `raven-authority-map` (canonical vs non-canonical context), `raven-guardrails` (guardrail types), `raven-coding-principles` (cross-language quality), `raven-namespace` (Raven-owned files), `raven-agent-compatibility` (canonical vs Claude/Codex adapters), `raven-lsp-mcp` (LSP-over-MCP and language-server defaults), `raven-antipatterns` (repo-specific recurring-issue registry).
 - If another tool inserts a managed block in `AGENTS.md`, treat it as authoritative for that tool's commands, syntax, and resource names — not as an override of these workflow guardrails.
 
 ## Retrieval Discipline
@@ -41,9 +69,7 @@ Use the cheapest adequate source before reading full files.
 | Build, test, or log output                       | RTK-wrapped shell command |
 
 - `rg` is recursive by default; never pass `-r` for recursion. `-r` is ripgrep's `--replace` and takes an argument — unlike grep's `-r`, which means `--recursive`.
-- `rg` skips hidden files and directories by default. This repo's agent harness lives entirely under
-  `.agents/`, `.claude/`, `.codex/`, and `.raven/`, so a plain `rg` reads as clean when it simply
-  never looked. Use `--hidden` when searching harness content.
+- `rg` skips hidden files and directories by default. Raven's own content sits under `.agents/` and `.claude/`, so `rg pattern common/` finds nothing and reads as clean. Use `--hidden` or `git grep` when searching shipped guidance.
 - Batch independent reads, searches, and inspections per turn.
 - Skeleton-first: for a large or unfamiliar file, get a symbol map (LSP document symbols, or `ast-grep`/`rg`) before reading, then read only the ranges you need — read a full file only when it is small or the whole structure matters.
 - Return concise findings before editing.
@@ -102,6 +128,7 @@ Pause and ask before work that is ambiguous or could create durable harm:
 - Do not modify secrets, credentials, generated files, lockfiles, or migrations unless required.
 - Do not add dependencies without explaining why.
 - Never hide uncertainty; state confidence and unresolved assumptions.
+- Agreement is not helpfulness. Before ratifying a design, plan, or conclusion the user proposed, name the specific thing you would change, or state why you agree with it.
 
 ## Platform Awareness
 
@@ -116,3 +143,5 @@ Pause and ask before work that is ambiguous or could create durable harm:
 - If recommended tools are missing, ask whether to install them, provide instructions, remind later, or stop reminding.
 - Do not install tools or suppress future reminders without explicit user approval.
 - If a SessionStart hook reports missing or unverified tools, ask how to proceed before relying on them.
+
+<!-- RAVEN:END -->
